@@ -12,17 +12,21 @@ import (
 
 var (
 	client     s_tracker.Client
-	configPath = "/.config/application-tracker"
+	configPath = "/.config/s-tracker"
 	rootCmd    = &cobra.Command{
-		Use:   "Apartment-Tracker",
+		Use:   "s-tracker",
 		Short: "It finds student apartments from s.dk and tracks them and shit idk",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			client, err := s_tracker.NewClient()
 			if err != nil {
 				return err
 			}
+			userInfo, err := client.GetUserInfo()
+			if err != nil {
+				return err
+			}
 
-			fmt.Println(client)
+			fmt.Printf("\nLogged in as: %s, (ApplicantId: %s)\n", userInfo.Username, client.GetApplicantId())
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {

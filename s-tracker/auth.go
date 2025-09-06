@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/gocolly/colly"
+	"github.com/spf13/viper"
 	"os"
 	//"github.com/google/go-querystring/query"
 	//"golang.org/x/net/html"
@@ -57,8 +58,16 @@ func SLogin(collector *colly.Collector) error {
 	}
 
 	cookies := collector.Cookies(SBaseUrl)
-	if len(cookies) < 2 {
+	if len(cookies) != 2 {
 		return fmt.Errorf("invalid credentials, try again")
+	}
+
+	for _, cookie := range cookies {
+		viper.Set("auth."+cookie.Name, cookie.Value)
+	}
+	err = viper.WriteConfig()
+	if err != nil {
+		fmt.Println("Unable to write to config, tokens are not saved")
 	}
 
 	return nil
