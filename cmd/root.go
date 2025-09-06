@@ -17,10 +17,12 @@ var (
 		Use:   "s-tracker",
 		Short: "It finds student apartments from s.dk and tracks them and shit idk",
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			client, err := s_tracker.NewClient()
+			var err error
+			client, err = s_tracker.NewClient()
 			if err != nil {
 				return err
 			}
+
 			userInfo, err := client.GetUserInfo()
 			if err != nil {
 				return err
@@ -46,6 +48,7 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	rootCmd.AddCommand(applicationsCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.

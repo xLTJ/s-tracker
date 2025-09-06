@@ -45,7 +45,7 @@ func clientSignIn(collector *colly.Collector) (applicantId string, err error) {
 		resStatus = r.StatusCode
 	})
 
-	// try to get the applicant id for every HTML response. should be inside a script tag after login.
+	// try to get the Applicant id for every HTML response. should be inside a script tag after login.
 	collector.OnHTML("script", func(e *colly.HTMLElement) {
 		scriptContent := e.Text
 

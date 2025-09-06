@@ -6,11 +6,6 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/spf13/viper"
 	"os"
-	//"github.com/google/go-querystring/query"
-	//"golang.org/x/net/html"
-	//"net/http"
-	//"net/http/cookiejar"
-	//"net/url"
 )
 
 const loginUrl = "/studiebolig/login/"

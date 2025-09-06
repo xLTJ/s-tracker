@@ -3,14 +3,14 @@ package s_tracker
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"github.com/gocolly/colly"
 )
 
 const (
-	applicantInfoApiPath = "/api/applicant/"
+	applicantInfoApiPath = "/api/applicant"
 )
 
-type applicant struct {
+type Applicant struct {
 	UserInfo User `json:"user"`
 }
 
@@ -22,30 +22,18 @@ type User struct {
 }
 
 func (c Client) GetUserInfo() (User, error) {
-	client := &http.Client{}
-
-	cookies := c.Collector.Cookies(SBaseUrl)
-	req, _ := http.NewRequest("GET", SBaseUrl+applicantInfoApiPath+"/"+c.applicantId, nil)
-
-	for _, cookie := range cookies {
-		req.AddCookie(cookie)
-	}
-
-	res, err := client.Do(req)
-	if err != nil {
-		return User{}, fmt.Errorf("error getting response: %v", err)
-	}
-
-	defer func() { _ = res.Body.Close() }()
-	if res.StatusCode != 200 {
-		return User{}, fmt.Errorf("unable to call api: %v", err)
-	}
-
-	var applicantInfo applicant
-	err = json.NewDecoder(res.Body).Decode(&applicantInfo)
+	var err error
+	var user User
+	c.Collector.OnResponse(func(r *colly.Response) {
+		var applicant Applicant
+		err = json.Unmarshal(r.Body, &applicant)
+		user = applicant.UserInfo
+	})
+	
+	_ = c.Collector.Visit(SBaseUrl + applicantInfoApiPath + "/" + c.applicantId)
 	if err != nil {
 		return User{}, fmt.Errorf("error decoding response: %v", err)
 	}
 
-	return applicantInfo.UserInfo, nil
+	return user, nil
 }
