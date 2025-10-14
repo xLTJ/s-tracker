@@ -1,11 +1,10 @@
 package s_tracker
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/gocolly/colly"
+	"github.com/pterm/pterm"
 	"github.com/spf13/viper"
-	"os"
 )
 
 const loginUrl = "/studiebolig/login/"
@@ -36,12 +35,6 @@ func SLogin(collector *colly.Collector) error {
 		}
 	})
 
-	//collector.OnError(func(r *colly.Response, err error) {
-	//	fmt.Printf("Error: %d %v URL: %s\n", r.StatusCode, err, r.Request.URL)
-	//	fmt.Printf("Response Headers: %v\n", r.Headers)
-	//	fmt.Printf("Response Body:\n%s\n", string(r.Body))
-	//})
-
 	err = collector.Post(SBaseUrl+loginUrl, map[string]string{
 		"csrfmiddlewaretoken": csrfMiddlewareToken,
 		"username":            username,
@@ -69,20 +62,10 @@ func SLogin(collector *colly.Collector) error {
 }
 
 func inputCredentials() (username, password string, err error) {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Log in with your s.dk credentials")
-	fmt.Printf("Enter username: ")
-	username, err = reader.ReadString('\n')
+	pterm.FgGreen.Println("Log in with your s.dk credentials")
+	username, _ = pterm.DefaultInteractiveTextInput.Show("Enter Username")
+	pterm.Println()
 
-	if err != nil {
-		return "", "", fmt.Errorf("error reading username: %v", err)
-	}
-
-	fmt.Printf("Enter password: ")
-	password, err = reader.ReadString('\n')
-	if err != nil {
-		return "", "", fmt.Errorf("error reading username: %v", err)
-	}
-
+	password, _ = pterm.DefaultInteractiveTextInput.Show("Enter Password")
 	return
 }

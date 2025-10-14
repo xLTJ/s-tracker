@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	applicantInfoApiPath = "/api/applicant"
+	applicantInfoApiPath = "api/applicant"
 )
 
 type Applicant struct {
@@ -29,8 +29,8 @@ func (c Client) GetUserInfo() (User, error) {
 		err = json.Unmarshal(r.Body, &applicant)
 		user = applicant.UserInfo
 	})
-	
-	_ = c.Collector.Visit(SBaseUrl + applicantInfoApiPath + "/" + c.applicantId)
+
+	_ = c.Collector.Visit(fmt.Sprintf("%s/%s/%s", SBaseUrl, applicantInfoApiPath, c.applicantId))
 	if err != nil {
 		return User{}, fmt.Errorf("error decoding response: %v", err)
 	}

@@ -3,6 +3,7 @@ package s_tracker
 import (
 	"fmt"
 	"github.com/gocolly/colly"
+	"github.com/pterm/pterm"
 	"github.com/spf13/viper"
 	"net/http"
 	"regexp"
@@ -74,10 +75,10 @@ func clientSignIn(collector *colly.Collector) (applicantId string, err error) {
 		}
 
 		if err == nil {
-			fmt.Println("Saved token is valid")
+			pterm.Success.Println("Saved token is valid")
 			return applicantId, nil
 		}
-		fmt.Println("Saved token invalid, you need to log in again")
+		pterm.Warning.Println("Saved token invalid, you need to log in again\n")
 	}
 
 	for resStatus != 200 {
@@ -89,11 +90,11 @@ func clientSignIn(collector *colly.Collector) (applicantId string, err error) {
 
 		err = collector.Visit(SBaseUrl + profilePath)
 		if resStatus != 200 {
-			fmt.Printf("Login success, but token is still invalid for some reason :/")
+			pterm.Error.Println("Login success, but token is still invalid for some reason :/\n")
 		}
 	}
 
-	fmt.Println("Log in success")
+	pterm.Success.Println("Log in success\n")
 
 	return applicantId, nil
 }

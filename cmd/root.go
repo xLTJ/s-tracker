@@ -3,6 +3,7 @@ package cmd
 import (
 	s_tracker "Apartment-Tracker/s-tracker"
 	"fmt"
+	"github.com/pterm/pterm"
 	"github.com/spf13/viper"
 	"log"
 	"os"
@@ -28,7 +29,7 @@ var (
 				return err
 			}
 
-			fmt.Printf("\nLogged in as: %s, (ApplicantId: %s)\n", userInfo.Username, client.GetApplicantId())
+			pterm.Info.Printf("Logged in as: %s, (ApplicantId: %s)\n\n", userInfo.Username, client.GetApplicantId())
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
