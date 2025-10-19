@@ -60,7 +60,7 @@ func clientSignIn(collector *colly.Collector) (applicantId string, err error) {
 
 	// if existing token and sessionId exists, try using those first
 	if csrfToken != "" && sessionId != "" {
-		fmt.Println("Attempting to use saved token...")
+		pterm.Info.Println("Attempting to use saved token...")
 		err := collector.SetCookies(SBaseUrl, []*http.Cookie{
 			{Name: "csrftoken", Value: csrfToken},
 			{Name: "sessionid", Value: sessionId},
@@ -84,7 +84,7 @@ func clientSignIn(collector *colly.Collector) (applicantId string, err error) {
 	for resStatus != 200 {
 		err := SLogin(collector)
 		if err != nil {
-			fmt.Printf("Login attempt failed: %v\n", err)
+			pterm.Error.Printf("Login attempt failed: %v\n", err)
 			continue
 		}
 
